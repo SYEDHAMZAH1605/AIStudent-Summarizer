@@ -335,9 +335,8 @@ STORAGE_DIR.mkdir(exist_ok=True)
 
 # Groq free tier models ordered by capability
 GROQ_MODELS = [
-    "llama-3.3-70b-versatile",   # best quality, 6000 RPM free — primary
-    "llama-3.1-70b-versatile",   # fallback
-    "llama3-70b-8192",           # last resort
+    "openai/gpt-oss-120b",
+    "openai/gpt-oss-20b",
 ]
 
 
@@ -475,8 +474,9 @@ class RAGPipeline:
         self._model_index = 0
 
         self.embeddings = HuggingFaceEndpointEmbeddings(
-            model="sentence-transformers/all-MiniLM-L6-v2",
-            huggingfacehub_api_token=hf_api_key,
+    model="sentence-transformers/all-MiniLM-L6-v2",
+    huggingfacehub_api_token=hf_api_key,
+    provider="hf-inference",
         )
 
         self.file_store = FileStore(self.embeddings, user_id)

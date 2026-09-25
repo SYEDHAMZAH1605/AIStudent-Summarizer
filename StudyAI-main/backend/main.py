@@ -256,8 +256,25 @@ def root():
 # ── Auth ──────────────────────────────────────────────────────────────────────
 @app.get("/auth/google")
 def google_login():
-    target_url = get_google_auth_url()
-    return RedirectResponse(url=target_url)
+    # Local development login — no Google OAuth required
+    user = upsert_user(
+        google_id="local-demo-user",
+        name="Demo Student",
+        email="demo@studyai.local",
+        avatar="",
+    )
+
+    token = create_token(user["id"])
+
+    FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+
+    return RedirectResponse(
+        url=f"{FRONTEND_URL}/auth"
+           f"?token={token}"
+           f"&name={user['name']}"
+           f"&avatar={user['avatar']}"
+           f"&email={user['email']}"
+    )
 
 
 @app.get("/auth/google/callback")
